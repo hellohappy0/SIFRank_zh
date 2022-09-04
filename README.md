@@ -25,41 +25,32 @@ EA：同时利用锚点词向量对不同句子中的相同词的词向量进行
 
 ## 环境
 ```
-Python 3.6
-nltk 3.4.3
-elmoformanylangs 0.0.3
-thulac 0.2.1
-torch 1.1.0
+elmoformanylangs==0.0.4.post2
+jieba==0.42.1
+nltk==3.7
+numpy==1.23.2
+stanfordcorenlp==3.9.1.1
+thulac==0.2.1
+torch==1.12.1
 ```
 ## 提示
-哈工大的elmoformanylangs 0.0.3中有个较为明显的问题，当返回所有层Embeddings的时候代码写错了，当output_layer=-2时并不是返回所有层的向量，只是返回了倒数第二层的。问题讨论在这里[#31](https://github.com/HIT-SCIR/ELMoForManyLangs/issues/31)
+环境安装可能的问题：
+* 报错 module 'time'： 
 ```
-elmo.sents2elmo(sents_tokened,output_layer=-2)
+File "...\thulac\character\CBTaggingDecoder.py", line 170, in segmentTag
+    start = time.clock()
+AttributeError: module 'time' has no attribute 'clock'
 ```
-建议这样修改elmo.py里class Embedder(object)类中的代码。
+是因为thulac的支持的python版本低于3.8，把对应行的``time.clock()``改成``time.perf_counter()``即可
 
-原代码：
-```
-if output_layer == -1:
-     payload = np.average(data, axis=0)
-else:
-     payload = data[output_layer]
-```
-修改后：
-```
-if output_layer == -1:
-     payload = np.average(data, axis=0)
- #code changed here
- elif output_layer == -2:
-     payload = data
- else:
-     payload = data[output_layer]
-```
+* 报错 Resource XXX not found： 
+先运行``other``文件夹下的``nltk_downloader.py``下载训练用的数据
 
+* ``test``文件夹下的``test.py``跑通说明该模型的环境搭建成功了
 
 ## 下载
 * 哈工大ELMo ``zhs.model`` 请从[这里](https://github.com/HIT-SCIR/ELMoForManyLangs) 下载,将其解压保存到 ``auxiliary_data/``目录下（注意要按照其要求更改config文件），本项目中已经将部分文件上传了，其中比较大的模型文件``encoder.pkl``和``token_embedder.pkl``请自行添加。
-* 清华分词工具包THULAC ``thulac.models`` 请从[这里](http://thulac.thunlp.org/)下载, 将其解压保存到 ``auxiliary_data/``目录下。
+* 清华分词工具包THULAC ``thulac.models`` 请从[这里](http://thulac.thunlp.org/)下载THULAC_lite的v1_2的python版, 将其解压保存到 ``auxiliary_data/``目录下，目录改名为``thulac.models``。
 
 ## 用法
 ```
