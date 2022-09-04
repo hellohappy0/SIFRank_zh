@@ -1,0 +1,7 @@
+/auxiliary_data/thulac.models/
+/auxiliary_data/zhs.model/encoder.pkl
+/auxiliary_data/zhs.model/token_embedder.pkl
+/auxiliary_data/zhs.model.tar.bz2
+/venv/
+/.idea/
+*/__pycache__
